@@ -52,3 +52,8 @@ a:hover {    color: rgb(208, 133, 4); }
 br { clear: left; }
 table { border: 1px solid black; border-collapse: collapse; margin-bottom: 1em; }
 td, th { border: 1px dashed black; padding: .2em .5em .2em .5em; text-align: left; }
+#balanceckeck {
+  font-style: italic;
+  font-size: 120%;
+  color: red;
+}
