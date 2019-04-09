@@ -22,7 +22,12 @@ $(document).ready(function () {
     $("#submititem").click(function () {
         var uvuId = parseInt(document.getElementById("empid").value);
         var itemId = parseInt(document.getElementById("itemid").value);
-        var itemQty = parseInt(document.getElementById("itemqty").value);
+        var retrievedQty = parseInt(document.getElementById("itemqty").value);
+        var itemQty = 1
+        if(retrievedQty > 0){
+            itemQty = retrievedQty;
+        }
+
         itemQty = Math.abs(itemQty);
         console.log("uvuid", uvuId);
         console.log("itemId", itemId);
@@ -61,8 +66,8 @@ $(document).ready(function () {
                                     ItemBarcode: itemId,
                                     SaleDate: new Date(),
                                     SalePrice: itemCost,
-                                    SaleQuantity: itemCount,
-                                    SaleTotal: itemCount * itemQty,
+                                    SaleQuantity: itemQty,
+                                    SaleTotal: itemCost * itemQty,
                                     UVUID: uvuId
                                 })
                                 .then(function(Ref){
@@ -142,7 +147,7 @@ $(document).ready(function () {
                 if (idFromDB == uvuId) {
                     console.log(doc.id, " => ", doc.data().CustomerBalance);
                     currentBalance = doc.data().CustomerBalance;
-                    document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance;
+                    document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
                 }
             });
         }).catch(function (error) {
@@ -186,7 +191,7 @@ $(document).ready(function () {
                         "CustomerPhoneNumber": doc.data().CustomerPhoneNumber,
                         "UVUID": doc.data().UVUID
                     })
-                    document.getElementById("mymoneyupdate").innerHTML = "Your Balance is now : $" + newCustBalance;
+                    document.getElementById("mymoneyupdate").innerHTML = "Your Balance is now : $" + newCustBalance.toFixed(2);
                 }
             });
         }).then(function () {
