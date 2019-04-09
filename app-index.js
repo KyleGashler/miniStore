@@ -15,9 +15,119 @@ $(document).ready(function () {
     firebase.initializeApp(config);
     var db = firebase.firestore();
     var customerDoc = db.collection("Customer");
-    var itemDoc = firebase.firestore().collection("Item");
-    var saleDoc = firebase.firestore().collection("Sale");
+    var itemDocument = db.collection("Item");
+    var saleDoc = db.collection("Sale");
 
+    //get Item
+    $("#submititem").click(function () {
+        var uvuId = parseInt(document.getElementById("empid").value);
+        var itemId = parseInt(document.getElementById("itemid").value);
+        var itemQty = parseInt(document.getElementById("itemqty").value);
+        itemQty = Math.abs(itemQty);
+        console.log("uvuid", uvuId);
+        console.log("itemId", itemId);
+        console.log("itemQty", itemQty);
+
+        customerDoc.get().then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+                var idFromDB = parseInt(doc.data().UVUID);
+                console.log("idFromDB", idFromDB);
+                if (idFromDB == uvuId) {
+                    //pull item from db
+                    itemDocument.get().then(function (itemQuerySnapshot) {
+                        itemQuerySnapshot.forEach(function (itemDoc) {
+                            var itemIdFromDB = parseInt(itemDoc.data().ItemBarcode);
+                            //match item to checkout code
+                            if (itemId == itemIdFromDB) {
+                                console.log("itemDoc.data()", itemDoc.data());
+                                console.log("itemDoc barcode", itemDoc.data().ItemBarcode);
+
+                                var itemCost = 0;
+                                const unparsedItemCost = itemDoc.data().ItemPrice;
+                                var itemCount = parseFloat(itemDoc.data().Quantity).toFixed(2);
+                                var itemName = itemDoc.data().ItemName;
+                                if(typeof unparsedItemCost == 'string'){
+                                    console.log("item cost was a string");
+                                    itemCost = Number(unparsedItemCost.replace(/[^0-9.-]+/g, ""));
+                                }else{
+                                    itemCost = unparsedItemCost;
+                                }
+                                itemCost = parseFloat(itemCost).toFixed(2);;
+                                console.log("itemCost", itemCost);
+                                console.log("itemCount", itemCount);
+
+                                //create new transaction
+                                saleDoc.add({
+                                    ItemBarcode: itemId,
+                                    SaleDate: new Date(),
+                                    SalePrice: itemCost,
+                                    SaleQuantity: itemCount,
+                                    SaleTotal: itemCount * itemQty,
+                                    UVUID: uvuId
+                                })
+                                .then(function(Ref){
+                                    console.log("Document written with ID ", Ref.ID);
+
+                                })
+                                .catch(function(error){
+                                    console.log("Error addding Doc: ", error)
+                                });
+
+                                //update item count
+                                var fbitemId = itemDoc.id;
+                                console.log("fbitemId",fbitemId);
+                                var itemDocRef = itemDocument.doc(fbitemId);
+
+                                if(!doc.data().CustomerDepartment)doc.data().CustomerDepartment="x";
+                                if(!doc.data().CustomerFirstName)doc.data().CustomerFirstName="x";
+                                if(!doc.data().CustomerLastName)doc.data().CustomerLastName="x";
+                                if(!doc.data().CustomerPhoneNumber)doc.data().CustomerPhoneNumber="x";
+                                itemDocRef.set({
+                                    "ItemBarcode": itemDoc.data().ItemBarcode,
+                                    "ItemName": itemName,
+                                    "ItemPrice": itemDoc.data().ItemPrice,
+                                    "Quantity": itemCount - itemQty
+                                });
+
+
+                                //update customer balance
+                                var fbid = doc.id;
+                                var DocRef = customerDoc.doc(fbid);
+                                var oldBalance = doc.data().CustomerBalance;
+                                var parsedBalance = 0;
+                                if(typeof oldBalance == 'string'){
+                                    parsedBalance = Number(oldBalance.replace(/[^0-9.-]+/g, ""));
+                                }else{
+                                    parsedBalance = oldBalance;
+                                }
+                                var newCustBalance = parseFloat(parsedBalance).toFixed(2) - (itemCost * itemQty);
+                                console.log("newCustBalance", " => ", newCustBalance);
+
+                                if(!doc.data().CustomerDepartment)doc.data().CustomerDepartment="x";
+                                if(!doc.data().CustomerFirstName)doc.data().CustomerFirstName="x";
+                                if(!doc.data().CustomerLastName)doc.data().CustomerLastName="x";
+                                if(!doc.data().CustomerPhoneNumber)doc.data().CustomerPhoneNumber="x";
+                                DocRef.set({
+                                    "CustomerBalance": newCustBalance,
+                                    "CustomerDepartment": doc.data().CustomerDepartment,
+                                    "CustomerFirstName": doc.data().CustomerFirstName,
+                                    "CustomerLastName": doc.data().CustomerLastName,
+                                    "CustomerPhoneNumber": doc.data().CustomerPhoneNumber,
+                                    "UVUID": doc.data().UVUID
+                                });
+
+                                //display cust balance checkoutresponse
+                                document.getElementById("checkoutresponse").innerHTML = "Enjoy your " + itemName+ "! Your new balance is : $" + newCustBalance.toFixed(2);
+                            }
+                        });
+                    });
+                }
+            });
+        }).catch(function (error) {
+            console.log("Transaction failed: ", error);
+            document.getElementById("errors").innerHTML = error;    
+        });
+    });
 
     //check balance
     $("#findbal").click(function () {
@@ -41,7 +151,6 @@ $(document).ready(function () {
         });
     });
 
-
     //add to balance
     $("#submitmoney").click(function () {
         var uvuId = document.getElementById("empid").value;
@@ -51,8 +160,6 @@ $(document).ready(function () {
         customerDoc.get().then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) { //10688754
                 if (doc.data().UVUID == uvuId) {
-                    console.log(doc.id, " => ", doc.data());
-                    console.log('into match');
                     var fbid = doc.id;
                     var DocRef = customerDoc.doc(fbid);
                     var oldBalance = doc.data().CustomerBalance;
@@ -84,13 +191,9 @@ $(document).ready(function () {
             });
         }).then(function () {
             console.log("Transaction successfully committed!");
-            mymoneyupdate
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
             document.getElementById("errors").innerHTML = error;    
         });
-
     });
-
-
 });
