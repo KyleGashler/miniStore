@@ -38,9 +38,17 @@
             <h1 class="card-header">Add User</h1>
             <div class="card-body">
                <div id="money">
-                   <label for="addmoney">Add Money: $</label>
-                   <input type="text" name="addmoney" id="addmoney" placeholder="0">
-                   <button id="submitmoney" class="btn btn-primary">Submit</button>
+                   <label for="adduser">User Id</label>
+                   <input type="text" name="adduser" id="adduser" placeholder="0"> <br>
+                   <label for="adduser">Department</label>
+                   <input type="text" name="dept" id="dept" placeholder="0"> <br>
+                   <label for="adduser">First Name</label>
+                   <input type="text" name="first" id="first" placeholder="0"> <br>
+                   <label for="adduser">Last Name</label>
+                   <input type="text" name="last" id="last" placeholder="0"> <br>
+                   <label for="adduser">Phone Number</label>
+                   <input type="text" name="phone" id="phone" placeholder="0"> <br>
+                   <button id="submituser" class="btn btn-primary">Submit</button>
                </div>
                <div id="mymoneyupdate"></div>
             </div>
@@ -49,7 +57,7 @@
         </div>
     </div>
 
-      <!--Display all Items-->
+      <!--Display Items-->
     <div class="container">
         <div class="card">
             <h1 class="card-header">Inventory</h1>
@@ -72,7 +80,7 @@
             <h1 class="card-header">User Balance</h1>
             <div class="card-body">
                <div id="balance">
-                   <label for="balance">User Balance</label>
+                   <label for="balance">User Id</label>
                    <input type="text" name="checkbal" id="checkbal" placeholder="0">
                    <button id="findbal" class="btn btn-primary">Submit</button>
                </div>
@@ -94,6 +102,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
-    <script src="app-index.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>
