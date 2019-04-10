@@ -13,17 +13,17 @@
     <!--Header-->
     <header>
         <div class="jumbotron">
-           <h1>Welcome To The Mini Store</h1>
+           <h1>Mini Store Admin</h1>
         </div>
     </header>
    
     <!--Login input-->
     <div class="container">
         <div class="card">
-            <h1 class="card-header">Please enter your UVU/Employee ID</h1>
+            <h1 class="card-header">Please enter your Admin ID</h1>
             <div class="card-body">
                <div id="login">
-                   <label for="empid">Employee Id:</label>
+                   <label for="empid">Admin Id:</label>
                    <input type="text" name="empid" id="empid" placeholder="00000000">
                </div>
             </div>
@@ -32,29 +32,10 @@
         </div>
     </div>
 
-      <!--Select Item-->
+    <!--Add New User-->
     <div class="container">
         <div class="card">
-            <h1 class="card-header">Choose Your Item</h1>
-            <div class="card-body">
-               <div id="item">
-                   <label for="itemid">Item Id:</label>
-                   <input type="text" name="itemid" id="itemid" placeholder="0"> <br>
-                   <label for="itemqty">Item Quantity:</label>
-                   <input type="text" name="itemqty" id="itemqty" placeholder="0"> <br>
-                   <button id="submititem" class="btn btn-primary">Submit</button>
-               </div>
-            </div>
-            <div id="checkoutresponse"></div>
-            <div class="card-body">
-            </div>
-        </div>
-    </div>
-
-      <!--Add money-->
-      <div class="container">
-        <div class="card">
-            <h1 class="card-header">Add Money To Account</h1>
+            <h1 class="card-header">Add User</h1>
             <div class="card-body">
                <div id="money">
                    <label for="addmoney">Add Money: $</label>
@@ -68,13 +49,30 @@
         </div>
     </div>
 
-    <!--Check Balance-->
+      <!--Display all Items-->
     <div class="container">
         <div class="card">
-            <h1 class="card-header">Check Balance</h1>
+            <h1 class="card-header">Inventory</h1>
+            <div class="card-body">
+               <div id="item">
+                   <label for="itemid">Item Id:</label>
+                   <input type="text" name="itemid" id="itemid" placeholder="0">
+                   <button id="submititem" class="btn btn-primary">Submit</button>
+               </div>
+            </div>
+            <div id="checkoutresponse"></div>
+            <div class="card-body">
+            </div>
+        </div>
+    </div>
+
+    <!--display all user Balances-->
+    <div class="container">
+        <div class="card">
+            <h1 class="card-header">User Balance</h1>
             <div class="card-body">
                <div id="balance">
-                   <label for="balance">My Balance</label>
+                   <label for="balance">User Balance</label>
                    <input type="text" name="checkbal" id="checkbal" placeholder="0">
                    <button id="findbal" class="btn btn-primary">Submit</button>
                </div>
@@ -84,8 +82,6 @@
             </div>
         </div>
     </div>
-    <br>
-    <button id="admin" class="btn btn-primary">Admin</button>
 
     <!--Footer-->
     <footer>

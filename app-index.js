@@ -1,5 +1,4 @@
 //import { parse } from "querystring";
-
 $(document).ready(function () {
     // Required for side-effects
     console.log('page start');
@@ -24,7 +23,7 @@ $(document).ready(function () {
         var itemId = parseInt(document.getElementById("itemid").value);
         var retrievedQty = parseInt(document.getElementById("itemqty").value);
         var itemQty = 1
-        if(retrievedQty > 0){
+        if (retrievedQty > 0) {
             itemQty = retrievedQty;
         }
 
@@ -51,10 +50,10 @@ $(document).ready(function () {
                                 const unparsedItemCost = itemDoc.data().ItemPrice;
                                 var itemCount = parseFloat(itemDoc.data().Quantity).toFixed(2);
                                 var itemName = itemDoc.data().ItemName;
-                                if(typeof unparsedItemCost == 'string'){
+                                if (typeof unparsedItemCost == 'string') {
                                     console.log("item cost was a string");
                                     itemCost = Number(unparsedItemCost.replace(/[^0-9.-]+/g, ""));
-                                }else{
+                                } else {
                                     itemCost = unparsedItemCost;
                                 }
                                 itemCost = parseFloat(itemCost).toFixed(2);;
@@ -70,23 +69,23 @@ $(document).ready(function () {
                                     SaleTotal: itemCost * itemQty,
                                     UVUID: uvuId
                                 })
-                                .then(function(Ref){
-                                    console.log("Document written with ID ", Ref.ID);
+                                    .then(function (Ref) {
+                                        console.log("Document written with ID ", Ref.ID);
 
-                                })
-                                .catch(function(error){
-                                    console.log("Error addding Doc: ", error)
-                                });
+                                    })
+                                    .catch(function (error) {
+                                        console.log("Error addding Doc: ", error)
+                                    });
 
                                 //update item count
                                 var fbitemId = itemDoc.id;
-                                console.log("fbitemId",fbitemId);
+                                console.log("fbitemId", fbitemId);
                                 var itemDocRef = itemDocument.doc(fbitemId);
 
-                                if(!doc.data().CustomerDepartment)doc.data().CustomerDepartment="x";
-                                if(!doc.data().CustomerFirstName)doc.data().CustomerFirstName="x";
-                                if(!doc.data().CustomerLastName)doc.data().CustomerLastName="x";
-                                if(!doc.data().CustomerPhoneNumber)doc.data().CustomerPhoneNumber="x";
+                                if (!doc.data().CustomerDepartment) doc.data().CustomerDepartment = "x";
+                                if (!doc.data().CustomerFirstName) doc.data().CustomerFirstName = "x";
+                                if (!doc.data().CustomerLastName) doc.data().CustomerLastName = "x";
+                                if (!doc.data().CustomerPhoneNumber) doc.data().CustomerPhoneNumber = "x";
                                 itemDocRef.set({
                                     "ItemBarcode": itemDoc.data().ItemBarcode,
                                     "ItemName": itemName,
@@ -100,18 +99,18 @@ $(document).ready(function () {
                                 var DocRef = customerDoc.doc(fbid);
                                 var oldBalance = doc.data().CustomerBalance;
                                 var parsedBalance = 0;
-                                if(typeof oldBalance == 'string'){
+                                if (typeof oldBalance == 'string') {
                                     parsedBalance = Number(oldBalance.replace(/[^0-9.-]+/g, ""));
-                                }else{
+                                } else {
                                     parsedBalance = oldBalance;
                                 }
                                 var newCustBalance = parseFloat(parsedBalance).toFixed(2) - (itemCost * itemQty);
                                 console.log("newCustBalance", " => ", newCustBalance);
 
-                                if(!doc.data().CustomerDepartment)doc.data().CustomerDepartment="x";
-                                if(!doc.data().CustomerFirstName)doc.data().CustomerFirstName="x";
-                                if(!doc.data().CustomerLastName)doc.data().CustomerLastName="x";
-                                if(!doc.data().CustomerPhoneNumber)doc.data().CustomerPhoneNumber="x";
+                                if (!doc.data().CustomerDepartment) doc.data().CustomerDepartment = "x";
+                                if (!doc.data().CustomerFirstName) doc.data().CustomerFirstName = "x";
+                                if (!doc.data().CustomerLastName) doc.data().CustomerLastName = "x";
+                                if (!doc.data().CustomerPhoneNumber) doc.data().CustomerPhoneNumber = "x";
                                 DocRef.set({
                                     "CustomerBalance": newCustBalance,
                                     "CustomerDepartment": doc.data().CustomerDepartment,
@@ -122,7 +121,7 @@ $(document).ready(function () {
                                 });
 
                                 //display cust balance checkoutresponse
-                                document.getElementById("checkoutresponse").innerHTML = "Enjoy your " + itemName+ "! Your new balance is : $" + newCustBalance.toFixed(2);
+                                document.getElementById("checkoutresponse").innerHTML = "Enjoy your " + itemName + "! Your new balance is : $" + newCustBalance.toFixed(2);
                             }
                         });
                     });
@@ -130,7 +129,7 @@ $(document).ready(function () {
             });
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
-            document.getElementById("errors").innerHTML = error;    
+            document.getElementById("errors").innerHTML = error;
         });
     });
 
@@ -152,7 +151,7 @@ $(document).ready(function () {
             });
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
-            document.getElementById("errors").innerHTML = error;    
+            document.getElementById("errors").innerHTML = error;
         });
     });
 
@@ -169,20 +168,20 @@ $(document).ready(function () {
                     var DocRef = customerDoc.doc(fbid);
                     var oldBalance = doc.data().CustomerBalance;
                     var intBalance = 0;
-                    if(typeof oldBalance == 'string'){
+                    if (typeof oldBalance == 'string') {
                         intBalance = Number(oldBalance.replace(/[^0-9.-]+/g, ""));
-                    }else{
+                    } else {
                         intBalance = oldBalance;
                     }
-                    console.log("intBalance",intBalance);
+                    console.log("intBalance", intBalance);
                     var addbalance = parseFloat(addMoney);
-                    console.log("addbalance",addbalance);
+                    console.log("addbalance", addbalance);
                     var newCustBalance = addbalance + parseFloat(intBalance);
                     console.log("newCustBalance", " => ", newCustBalance);
-                    if(!doc.data().CustomerDepartment)doc.data().CustomerDepartment="x";
-                    if(!doc.data().CustomerFirstName)doc.data().CustomerFirstName="x";
-                    if(!doc.data().CustomerLastName)doc.data().CustomerLastName="x";
-                    if(!doc.data().CustomerPhoneNumber)doc.data().CustomerPhoneNumber="x";
+                    if (!doc.data().CustomerDepartment) doc.data().CustomerDepartment = "x";
+                    if (!doc.data().CustomerFirstName) doc.data().CustomerFirstName = "x";
+                    if (!doc.data().CustomerLastName) doc.data().CustomerLastName = "x";
+                    if (!doc.data().CustomerPhoneNumber) doc.data().CustomerPhoneNumber = "x";
                     DocRef.set({
                         "CustomerBalance": newCustBalance,
                         "CustomerDepartment": doc.data().CustomerDepartment,
@@ -198,7 +197,35 @@ $(document).ready(function () {
             console.log("Transaction successfully committed!");
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
-            document.getElementById("errors").innerHTML = error;    
+            document.getElementById("errors").innerHTML = error;
         });
     });
+
+    //check balance
+    $("#findbal").click(function () {
+        var uvuId = parseInt(document.getElementById("empid").value);
+        console.log("uvuid", uvuId);
+        customerDoc.get().then(function (querySnapshot) {
+            console.log("querySnapshot", querySnapshot);
+            querySnapshot.forEach(function (doc) { //10688754
+                console.log("doc", doc.data().UVUID);
+                var idFromDB = parseInt(doc.data().UVUID);
+                console.log("idFromDB", idFromDB);
+                if (idFromDB == uvuId) {
+                    console.log(doc.id, " => ", doc.data().CustomerBalance);
+                    currentBalance = doc.data().CustomerBalance;
+                    document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
+                }
+            });
+        }).catch(function (error) {
+            console.log("Transaction failed: ", error);
+            document.getElementById("errors").innerHTML = error;
+        });
+    });
+    //admin jump
+    $("#admin").click(function () {
+        window.location.replace("http://www.ministore.com/admin.html");
+    });
+
+
 });
