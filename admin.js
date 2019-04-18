@@ -28,18 +28,19 @@ $(document).ready(function () {
         console.log("uvuid", uvuId);
         customerDoc.get().then(function (querySnapshot) {
             console.log("querySnapshot", querySnapshot);
+            var match = false;
             querySnapshot.forEach(function (doc) { //10688754
                 console.log("doc", doc.data().UVUID);
                 var idFromDB = parseInt(doc.data().UVUID);
                 console.log("idFromDB", idFromDB);
                 if (idFromDB == uvuId) {
+                    match = true;
                     console.log(doc.id, " => ", doc.data().CustomerBalance);
                     currentBalance = doc.data().CustomerBalance;
-                    document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
-                }else {
-                    document.getElementById("balancecheck").innerHTML ="We did not manage to find anyone with that ID. Try again!"
+                    document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance;
                 }
             });
+            if (!match)  document.getElementById("balancecheck").innerHTML ="We did not manage to find anyone with that ID. Try again!";
         }).catch(function (error) {
             document.getElementById("balancecheck").innerHTML = error;
             console.log("Transaction failed: ", error);
@@ -56,19 +57,20 @@ $(document).ready(function () {
         console.log("itemId", itemId);
         itemDocument.get().then(function (querySnapshot) {
             console.log("querySnapshot", querySnapshot);
+            var match = false;
             querySnapshot.forEach(function (doc) { //10688754
                 console.log("doc", doc.data().ItemBarcode);
                 var idFromDB = parseInt(doc.data().ItemBarcode);
                 console.log("idFromDB", idFromDB);
                 if (idFromDB == itemId) {
+                    match = true;
                     console.log(doc.id, " => ", doc.data().Quantity);
                     var qty = doc.data().Quantity;
                     var name = doc.data().ItemName;
                     document.getElementById("checkoutresponse").innerHTML = "Quantity Remaining for " + name + " is " + qty;
-                }else{
-                    document.getElementById("checkoutresponse").innerHTML = "That Item does not exist. Try another!"
                 }
             });
+            if (!match) document.getElementById("checkoutresponse").innerHTML = "That Item does not exist. Try another!";
         }).catch(function (error) {
             document.getElementById("checkoutresponse").innerHTML = error;
             console.log("Transaction failed: ", error);        
@@ -82,11 +84,11 @@ $(document).ready(function () {
             throw "Incorrect Admin ID";}
         var custId = parseInt(document.getElementById("adduser").value);
         console.log("custId", custId);
-        var dept = parseInt(document.getElementById("dept").value);
+        var dept = document.getElementById("dept").value;
         console.log("dept", dept);
-        var last = parseInt(document.getElementById("last").value);
+        var last = document.getElementById("last").value;
         console.log("last", last);
-        var first = parseInt(document.getElementById("first").value);
+        var first = document.getElementById("first").value;
         console.log("first", first);
         var phone = parseInt(document.getElementById("phone").value);
         console.log("phone", phone);
