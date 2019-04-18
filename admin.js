@@ -14,9 +14,16 @@ $(document).ready(function () {
     var db = firebase.firestore();
     var customerDoc = db.collection("Customer");
     var itemDocument = db.collection("Item");
-
+    var adminPass = 2002;
     //check balance
     $("#findbal").click(function () {
+        var adminInput = parseInt(document.getElementById("empid").value.trim());
+        console.log("adminInput",adminInput);
+        console.log("adminPass",adminPass);
+        if(adminPass != adminInput){ 
+            document.getElementById("balancecheck").innerHTML = "Incorrect Admin ID";
+            throw "Incorrect Admin ID";
+        }
         var uvuId = parseInt(document.getElementById("checkbal").value);
         console.log("uvuid", uvuId);
         customerDoc.get().then(function (querySnapshot) {
@@ -29,16 +36,22 @@ $(document).ready(function () {
                     console.log(doc.id, " => ", doc.data().CustomerBalance);
                     currentBalance = doc.data().CustomerBalance;
                     document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
+                }else {
+                    document.getElementById("balancecheck").innerHTML ="We did not manage to find anyone with that ID. Try again!"
                 }
             });
         }).catch(function (error) {
+            document.getElementById("balancecheck").innerHTML = error;
             console.log("Transaction failed: ", error);
-            document.getElementById("errors").innerHTML = error;
         });
     });
 
      //check inventory
      $("#submititem").click(function () {
+        var adminInput =document.getElementById("empid").value.trim();
+        if(adminPass != adminInput) {
+            document.getElementById("checkoutresponse").innerHTML = "Incorrect Admin ID";
+            throw "Incorrect Admin ID";}
         var itemId = parseInt(document.getElementById("itemid").value);
         console.log("itemId", itemId);
         itemDocument.get().then(function (querySnapshot) {
@@ -52,15 +65,21 @@ $(document).ready(function () {
                     var qty = doc.data().Quantity;
                     var name = doc.data().ItemName;
                     document.getElementById("checkoutresponse").innerHTML = "Quantity Remaining for " + name + " is " + qty;
+                }else{
+                    document.getElementById("checkoutresponse").innerHTML = "That Item does not exist. Try another!"
                 }
             });
         }).catch(function (error) {
-            console.log("Transaction failed: ", error);
-            document.getElementById("errors").innerHTML = error;
+            document.getElementById("checkoutresponse").innerHTML = error;
+            console.log("Transaction failed: ", error);        
         });
     });
     //Add User
     $("#submituser").click(function () {
+        var adminInput =document.getElementById("empid").value.trim();
+        if(adminPass != adminInput) {
+            document.getElementById("mymoneyupdate").innerHTML = "Incorrect Admin ID";
+            throw "Incorrect Admin ID";}
         var custId = parseInt(document.getElementById("adduser").value);
         console.log("custId", custId);
         var dept = parseInt(document.getElementById("dept").value);
@@ -83,8 +102,8 @@ $(document).ready(function () {
             document.getElementById("mymoneyupdate").innerHTML = "Customer added : " + custId;
         })
         .catch(function(error){
+            document.getElementById("mymoneyupdate").innerHTML = "Failure adding Id. Are your Data types correct?"
             console.log("Error addding Doc: ", error);
-            document.getElementById("errors").innerHTML = error;
         });
 
     });

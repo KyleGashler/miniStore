@@ -26,12 +26,7 @@ $(document).ready(function () {
         if (retrievedQty > 0) {
             itemQty = retrievedQty;
         }
-
         itemQty = Math.abs(itemQty);
-        console.log("uvuid", uvuId);
-        console.log("itemId", itemId);
-        console.log("itemQty", itemQty);
-
         customerDoc.get().then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
                 var idFromDB = parseInt(doc.data().UVUID);
@@ -45,21 +40,17 @@ $(document).ready(function () {
                             if (itemId == itemIdFromDB) {
                                 console.log("itemDoc.data()", itemDoc.data());
                                 console.log("itemDoc barcode", itemDoc.data().ItemBarcode);
-
                                 var itemCost = 0;
                                 const unparsedItemCost = itemDoc.data().ItemPrice;
                                 var itemCount = parseFloat(itemDoc.data().Quantity).toFixed(2);
                                 var itemName = itemDoc.data().ItemName;
                                 if (typeof unparsedItemCost == 'string') {
-                                    console.log("item cost was a string");
+                                    
                                     itemCost = Number(unparsedItemCost.replace(/[^0-9.-]+/g, ""));
                                 } else {
                                     itemCost = unparsedItemCost;
                                 }
                                 itemCost = parseFloat(itemCost).toFixed(2);;
-                                console.log("itemCost", itemCost);
-                                console.log("itemCount", itemCount);
-
                                 //create new transaction
                                 saleDoc.add({
                                     ItemBarcode: itemId,
@@ -92,8 +83,6 @@ $(document).ready(function () {
                                     "ItemPrice": itemDoc.data().ItemPrice,
                                     "Quantity": itemCount - itemQty
                                 });
-
-
                                 //update customer balance
                                 var fbid = doc.id;
                                 var DocRef = customerDoc.doc(fbid);
@@ -122,6 +111,8 @@ $(document).ready(function () {
 
                                 //display cust balance checkoutresponse
                                 document.getElementById("checkoutresponse").innerHTML = "Enjoy your " + itemName + "! Your new balance is : $" + newCustBalance.toFixed(2);
+                            } else {
+                                document.getElementById("checkoutresponse").innerHTML = "We did not find that Item ID in the system. Please try again!"
                             }
                         });
                     });
@@ -147,6 +138,8 @@ $(document).ready(function () {
                     console.log(doc.id, " => ", doc.data().CustomerBalance);
                     currentBalance = doc.data().CustomerBalance;
                     document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
+                } else {
+                    document.getElementById("balancecheck").innerHTML = "We did not find your ID in the system."
                 }
             });
         }).catch(function (error) {
@@ -191,6 +184,8 @@ $(document).ready(function () {
                         "UVUID": doc.data().UVUID
                     })
                     document.getElementById("mymoneyupdate").innerHTML = "Your Balance is now : $" + newCustBalance.toFixed(2);
+                } else {
+                    document.getElementById("mymoneyupdate").innerHTML = "We did not find you in the system. Is your ID correct?"
                 }
             });
         }).then(function () {
@@ -216,6 +211,7 @@ $(document).ready(function () {
                     currentBalance = doc.data().CustomerBalance;
                     document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
                 }
+                document.getElementById("balancecheck").innerHTML = "We did not find your account. Check your ID"
             });
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
@@ -224,7 +220,8 @@ $(document).ready(function () {
     });
     //admin jump
     $("#admin").click(function () {
-        window.location.replace("http://www.ministore.com/admin.html");
+        var myLocation = location.href;
+        window.location.replace(myLocation + "/admin.html");
     });
 
 
