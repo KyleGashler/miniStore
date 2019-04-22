@@ -38,6 +38,7 @@ $(document).ready(function () {
                             var itemIdFromDB = parseInt(itemDoc.data().ItemBarcode);
                             //match item to checkout code
                             if (itemId == itemIdFromDB) {
+                                var success = false;
                                 console.log("itemDoc.data()", itemDoc.data());
                                 console.log("itemDoc barcode", itemDoc.data().ItemBarcode);
                                 var itemCost = 0;
@@ -45,7 +46,7 @@ $(document).ready(function () {
                                 var itemCount = parseFloat(itemDoc.data().Quantity).toFixed(2);
                                 var itemName = itemDoc.data().ItemName;
                                 if (typeof unparsedItemCost == 'string') {
-                                    
+
                                     itemCost = Number(unparsedItemCost.replace(/[^0-9.-]+/g, ""));
                                 } else {
                                     itemCost = unparsedItemCost;
@@ -111,9 +112,9 @@ $(document).ready(function () {
 
                                 //display cust balance checkoutresponse
                                 document.getElementById("checkoutresponse").innerHTML = "Enjoy your " + itemName + "! Your new balance is : $" + newCustBalance.toFixed(2);
-                            } else {
-                                document.getElementById("checkoutresponse").innerHTML = "We did not find that Item ID in the system. Please try again!"
+                                success = true;
                             }
+                            if (!success) document.getElementById("checkoutresponse").innerHTML = "We did not find that Item ID in the system. Please try again!"
                         });
                     });
                 }
@@ -131,6 +132,7 @@ $(document).ready(function () {
         customerDoc.get().then(function (querySnapshot) {
             console.log("querySnapshot", querySnapshot);
             querySnapshot.forEach(function (doc) { //10688754
+                var match = false;
                 console.log("doc", doc.data().UVUID);
                 var idFromDB = parseInt(doc.data().UVUID);
                 console.log("idFromDB", idFromDB);
@@ -138,9 +140,9 @@ $(document).ready(function () {
                     console.log(doc.id, " => ", doc.data().CustomerBalance);
                     currentBalance = doc.data().CustomerBalance;
                     document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
-                } else {
-                    document.getElementById("balancecheck").innerHTML = "We did not find your ID in the system."
+                    match = true;
                 }
+                if (!match) document.getElementById("checkoutresponse").innerHTML = "Your user id was not found!";
             });
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
@@ -152,11 +154,13 @@ $(document).ready(function () {
     $("#submitmoney").click(function () {
         var uvuId = document.getElementById("empid").value;
         var addMoney = document.getElementById("addmoney").value;
+        var match = false;
         console.log("addMoney", addMoney);
         console.log("uvuid", uvuId);
         customerDoc.get().then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) { //10688754
                 if (doc.data().UVUID == uvuId) {
+                   
                     var fbid = doc.id;
                     var DocRef = customerDoc.doc(fbid);
                     var oldBalance = doc.data().CustomerBalance;
@@ -183,10 +187,13 @@ $(document).ready(function () {
                         "CustomerPhoneNumber": doc.data().CustomerPhoneNumber,
                         "UVUID": doc.data().UVUID
                     })
+                    match = true
                     document.getElementById("mymoneyupdate").innerHTML = "Your Balance is now : $" + newCustBalance.toFixed(2);
-                } else {
-                    document.getElementById("mymoneyupdate").innerHTML = "We did not find you in the system. Is your ID correct?"
+                    
                 }
+                console.log("match status", match);
+                if (!match) document.getElementById("mymoneyupdate").innerHTML = "Your user id was not found!";
+
             });
         }).then(function () {
             console.log("Transaction successfully committed!");
@@ -201,6 +208,7 @@ $(document).ready(function () {
         var uvuId = parseInt(document.getElementById("empid").value);
         console.log("uvuid", uvuId);
         customerDoc.get().then(function (querySnapshot) {
+            var match = false;
             console.log("querySnapshot", querySnapshot);
             querySnapshot.forEach(function (doc) { //10688754
                 console.log("doc", doc.data().UVUID);
@@ -210,8 +218,9 @@ $(document).ready(function () {
                     console.log(doc.id, " => ", doc.data().CustomerBalance);
                     currentBalance = doc.data().CustomerBalance;
                     document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
+                    match = true;
                 }
-                document.getElementById("balancecheck").innerHTML = "We did not find your account. Check your ID"
+                if (!match) document.getElementById("balancecheck").innerHTML = "We did not find your account. Check your ID"
             });
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
