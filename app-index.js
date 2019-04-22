@@ -34,11 +34,11 @@ $(document).ready(function () {
                 if (idFromDB == uvuId) {
                     //pull item from db
                     itemDocument.get().then(function (itemQuerySnapshot) {
+                        var success = false;
                         itemQuerySnapshot.forEach(function (itemDoc) {
                             var itemIdFromDB = parseInt(itemDoc.data().ItemBarcode);
                             //match item to checkout code
                             if (itemId == itemIdFromDB) {
-                                var success = false;
                                 console.log("itemDoc.data()", itemDoc.data());
                                 console.log("itemDoc barcode", itemDoc.data().ItemBarcode);
                                 var itemCost = 0;
@@ -114,6 +114,7 @@ $(document).ready(function () {
                                 document.getElementById("checkoutresponse").innerHTML = "Enjoy your " + itemName + "! Your new balance is : $" + newCustBalance.toFixed(2);
                                 success = true;
                             }
+                            console.log("success",success);
                             if (!success) document.getElementById("checkoutresponse").innerHTML = "We did not find that Item ID in the system. Please try again!"
                         });
                     });
@@ -197,31 +198,6 @@ $(document).ready(function () {
             });
         }).then(function () {
             console.log("Transaction successfully committed!");
-        }).catch(function (error) {
-            console.log("Transaction failed: ", error);
-            document.getElementById("errors").innerHTML = error;
-        });
-    });
-
-    //check balance
-    $("#findbal").click(function () {
-        var uvuId = parseInt(document.getElementById("empid").value);
-        console.log("uvuid", uvuId);
-        customerDoc.get().then(function (querySnapshot) {
-            var match = false;
-            console.log("querySnapshot", querySnapshot);
-            querySnapshot.forEach(function (doc) { //10688754
-                console.log("doc", doc.data().UVUID);
-                var idFromDB = parseInt(doc.data().UVUID);
-                console.log("idFromDB", idFromDB);
-                if (idFromDB == uvuId) {
-                    console.log(doc.id, " => ", doc.data().CustomerBalance);
-                    currentBalance = doc.data().CustomerBalance;
-                    document.getElementById("balancecheck").innerHTML = "Your Balance is : $" + currentBalance.toFixed(2);
-                    match = true;
-                }
-                if (!match) document.getElementById("balancecheck").innerHTML = "We did not find your account. Check your ID"
-            });
         }).catch(function (error) {
             console.log("Transaction failed: ", error);
             document.getElementById("errors").innerHTML = error;
